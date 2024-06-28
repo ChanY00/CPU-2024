@@ -8,12 +8,12 @@ import spacy
 from nltk import bigrams
 
 # 엑셀 파일 불러오기
-file_path = "C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\CPU_test.xlsx"  # 파일 경로 지정
+file_path = "C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\CPU_data_middle.xlsx"  # 파일 경로 지정
 df = pd.read_excel(file_path)
 
 # 필요한 열에 대한 전처리 수행
-df['name'] = df['name'].astype(str)
-df['name'] = df['name'].apply(lambda x: x.upper())  # 대문자 변환 혹은 다른 필요한 처리
+df['발명의 명칭'] = df['발명의 명칭'].astype(str)
+df['발명의 명칭'] = df['발명의 명칭'].apply(lambda x: x.upper())  # 대문자 변환 혹은 다른 필요한 처리
 
 # 함수 정의: 특수 문자 제거
 def remove_special_characters(text):
@@ -21,7 +21,7 @@ def remove_special_characters(text):
     return text
 
 # '요약' 열에 적용하여 특수 문자 제거
-df['name'] = df['name'].astype(str).apply(remove_special_characters)
+df['발명의 명칭'] = df['발명의 명칭'].astype(str).apply(remove_special_characters)
 
 
 # 불용어 제거 코드
@@ -42,7 +42,7 @@ def remove_stopwords(text):
     return filtered_text
 
 # 불용어 제거 및 대체 작업 적용
-df['name'] = df['name'].astype(str).apply(remove_stopwords)
+df['발명의 명칭'] = df['발명의 명칭'].astype(str).apply(remove_stopwords)
 
 #표제어추출
 # WordNet 데이터 다운로드 (표제어 추출을 위해 필요)
@@ -53,7 +53,7 @@ lemmatizer = WordNetLemmatizer()
 
 # 여러분의 DataFrame('df')을 가정하고 있는데, 여기서 '요약' 컬럼을 가정합니다.
 # 해당 컬럼의 각 단어를 lemmatize하여 다시 컬럼에 할당하는 예시입니다.
-df['name'] = df['name'].astype(str).apply(lambda x: ' '.join([lemmatizer.lemmatize(word) for word in x.split()]))
+df['발명의 명칭'] = df['발명의 명칭'].astype(str).apply(lambda x: ' '.join([lemmatizer.lemmatize(word) for word in x.split()]))
 
 # SpaCy 모델 로드
 nlp = spacy.load("en_core_web_sm")
@@ -65,7 +65,7 @@ def lemmatize_text(text):
     return lemmatized_text
 
 # DataFrame의 요약 컬럼에 적용
-df['name'] = df['name'].astype(str).apply(lemmatize_text)
+df['발명의 명칭'] = df['발명의 명칭'].astype(str).apply(lemmatize_text)
 
 # 명사의 원형 추출 함수 정의
 def extract_noun_words(text):
@@ -74,7 +74,7 @@ def extract_noun_words(text):
     return ' '.join(noun_words).strip()
 
 # DataFrame의 '요약' 열에 적용하여 명사만 추출
-df['name'] = df['name'].astype(str).apply(extract_noun_words)
+df['발명의 명칭'] = df['발명의 명칭'].astype(str).apply(extract_noun_words)
 
 
 
@@ -85,14 +85,14 @@ replacements = {
 }
 # 단어 대체 적용
 for key, value in replacements.items():
-    df['name'] = df['name'].str.replace(key, value, case=False)
+    df['발명의 명칭'] = df['발명의 명칭'].str.replace(key, value, case=False)
 
 # '출원일' 열의 형식 변환
-df['date'] = pd.to_datetime(df['date'], errors='coerce')
+df['출원일'] = pd.to_datetime(df['출원일'], errors='coerce')
 
 
 # NaT 값을 제거하는 것도 고려할 수 있습니다.
-df = df.dropna(subset=['date'])
+df = df.dropna(subset=['출원일'])
 
 
 # bigram 생성 함수 정의
@@ -101,14 +101,14 @@ def create_bigrams(text):
     bigram_list = ['_'.join(bigram) for bigram in bigrams(word_tokens)]
     return ' '.join(bigram_list)
 
-# '요약( 열에 적용하여 bigram 생성
-df['name_bigrams'] = df['name'].astype(str).apply(create_bigrams)
+# 발명의 명칭 열에 적용하여 bigram 생성
+df['발명의 명칭_bigrams'] = df['발명의 명칭'].astype(str).apply(create_bigrams)
 
 # 연도별, 기술별로 그룹화하고 키워드 빈도분석
-keyword_freq = df.groupby(['mid', df['date'].dt.year])['name'].apply(lambda x: ' '.join(x)).apply(lambda x: pd.Series(nltk.FreqDist(word_tokenize(x.upper())))).unstack().fillna(0)
+keyword_freq = df.groupby(['중분류', df['출원일'].dt.year])['발명의 명칭'].apply(lambda x: ' '.join(x)).apply(lambda x: pd.Series(nltk.FreqDist(word_tokenize(x.upper())))).unstack().fillna(0)
 
 # bigram에 대한 빈도분석
-keyword_freq_bigrams = df.groupby(['mid', df['date'].dt.year])['name_bigrams'].apply(lambda x: ' '.join(x)).apply(lambda x: pd.Series(nltk.FreqDist(word_tokenize(x.upper())))).unstack().fillna(0)
+keyword_freq_bigrams = df.groupby(['중분류', df['출원일'].dt.year])['발명의 명칭_bigrams'].apply(lambda x: ' '.join(x)).apply(lambda x: pd.Series(nltk.FreqDist(word_tokenize(x.upper())))).unstack().fillna(0)
 
 # 전치하여 행과 열을 바꾸고 CSV 파일로 저장
 keyword_freq_transposed = keyword_freq.T
@@ -117,5 +117,5 @@ keyword_freq_bigrams_transposed = keyword_freq_bigrams.T
 # 두 DataFrame을 합치기
 merged_df = pd.concat([keyword_freq_transposed, keyword_freq_bigrams_transposed], axis=1)
 
-# 합친 DataFrame을 CSV 파일로 저장
-merged_df.to_csv("C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\CPU_test.csv")
+# 합친 DataFrame을 EXCEL 파일로 저장
+merged_df.to_excel("C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\CPU_data_middle.excel")
