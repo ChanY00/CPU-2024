@@ -29,7 +29,7 @@
     "Python.biagram포함.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "chan",
     "last_opened_file_path": "C:/Users/dnjsr/Desktop/CodeTest",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -57,7 +57,7 @@
       <workItem from="1719294429594" duration="4321000" />
       <workItem from="1719299348041" duration="20000" />
       <workItem from="1719299500377" duration="17000" />
-      <workItem from="1719536623115" duration="2367000" />
+      <workItem from="1719536623115" duration="6893000" />
     </task>
     <servers />
   </component>
@@ -76,6 +76,6 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/$biagram.coverage" NAME="biagram포함 Coverage Results" MODIFIED="1719537549770" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/$biagram.coverage" NAME="biagram포함 Coverage Results" MODIFIED="1719545810153" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
