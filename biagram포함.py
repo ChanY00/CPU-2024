@@ -101,6 +101,5 @@ keyword_freq_bigrams_transposed = keyword_freq_bigrams.T
 
 # 두 DataFrame을 합치기
 merged_df = pd.concat([keyword_freq_transposed, keyword_freq_bigrams_transposed], axis=1)
-
 # 합친 DataFrame을 EXCEL 파일로 저장
 merged_df.to_excel("C:\\workstation\\CPU\\CPU_data_big_merge_2019_onwards.xlsx")
