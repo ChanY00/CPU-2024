@@ -87,7 +87,11 @@ def create_bigrams(text):
     return ' '.join(bigram_list)
 
 # 발명의 명칭 열에 적용하여 bigram 생성 및 할당
-df_2019_onwards['발명의 명칭_bigrams'] = df_2019_onwards['발명의 명칭'].astype(str).apply(create_bigrams)
+df_2019_onwards = df_2019_onwards.copy()
+df_2019_onwards.loc[:, '발명의 명칭_bigrams'] = df_2019_onwards['발명의 명칭'].astype(str).apply(create_bigrams)
+
+# 중복 바이그램 제거
+df_2019_onwards.loc[:, '발명의 명칭_bigrams'] = df_2019_onwards['발명의 명칭_bigrams'].apply(lambda x: ' '.join(pd.Series(x.split()).drop_duplicates()))
 
 # 연도별, 기술별로 그룹화하고 키워드 빈도분석
 keyword_freq = df_2019_onwards.groupby(['중분류', df_2019_onwards['출원일'].dt.year])['발명의 명칭'].apply(lambda x: ' '.join(x)).apply(lambda x: pd.Series(nltk.FreqDist(word_tokenize(x.upper())))).unstack().fillna(0)
@@ -95,11 +99,12 @@ keyword_freq = df_2019_onwards.groupby(['중분류', df_2019_onwards['출원일'
 # bigram에 대한 빈도분석
 keyword_freq_bigrams = df_2019_onwards.groupby(['중분류', df_2019_onwards['출원일'].dt.year])['발명의 명칭_bigrams'].apply(lambda x: ' '.join(x)).apply(lambda x: pd.Series(nltk.FreqDist(word_tokenize(x.upper())))).unstack().fillna(0)
 
-# 전치하여 행과 열을 바꾸고 CSV 파일로 저장
+# 전치하여 행과 열을 바꾸기
 keyword_freq_transposed = keyword_freq.T
 keyword_freq_bigrams_transposed = keyword_freq_bigrams.T
 
-# 두 DataFrame을 합치기
-merged_df = pd.concat([keyword_freq_transposed, keyword_freq_bigrams_transposed], axis=1)
-# 합친 DataFrame을 EXCEL 파일로 저장
-merged_df.to_excel("C:\\workstation\\CPU\\CPU_data_big_merge_2019_onwards.xlsx")
+# 키워드 빈도 분석 결과를 EXCEL 파일로 저장
+keyword_freq_transposed.to_excel("C:\\workstation\\CPU\\CPU_keyword_freq_2019_onwards.xlsx")
+
+# 바이그램 빈도 분석 결과를 EXCEL 파일로 저장
+keyword_freq_bigrams_transposed.to_excel("C:\\workstation\\CPU\\CPU_bigram_freq_2019_onwards.xlsx")
