@@ -11,7 +11,7 @@ from nltk import bigrams
 nlp = spacy.load("en_core_web_sm")
 
 # 엑셀 파일 불러오기
-file_path = 'C:\\workstation\\CPU\\CPU_data_big.xlsx'  # 파일 경로 지정
+file_path = 'C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\CPU_data_small.xlsx'  # 파일 경로 지정
 df = pd.read_excel(file_path)
 
 # 필요한 열에 대한 전처리 수행
@@ -104,7 +104,7 @@ keyword_freq_transposed = keyword_freq.T
 keyword_freq_bigrams_transposed = keyword_freq_bigrams.T
 
 # 키워드 빈도 분석 결과를 EXCEL 파일로 저장
-keyword_freq_transposed.to_excel("C:\\workstation\\CPU\\CPU_keyword_freq_2019_onwards.xlsx")
+keyword_freq_transposed.to_excel("C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\CPU_keyword_freq_2019_onwards.xlsx")
 
 # 바이그램 빈도 분석 결과를 EXCEL 파일로 저장
-keyword_freq_bigrams_transposed.to_excel("C:\\workstation\\CPU\\CPU_bigram_freq_2019_onwards.xlsx")
+keyword_freq_bigrams_transposed.to_excel("C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\CPU_bigram_freq_2019_onwards.xlsx")
