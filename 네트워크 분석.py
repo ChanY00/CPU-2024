@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     # Excel 파일 읽기
-    dataset = pd.read_excel('C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\CPU_data_middle.excel')
+    dataset = pd.read_excel('C:\workstation\CPU\CPU_data_big')
 
     # 중심성 척도 계산을 위한 그래프 생성
     G_central = nx.Graph()

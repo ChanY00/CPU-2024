@@ -7,8 +7,11 @@ from nltk.stem import WordNetLemmatizer
 import spacy
 from nltk import bigrams
 
+# SpaCy 모델 로드
+nlp = spacy.load("en_core_web_sm")
+
 # 엑셀 파일 불러오기
-file_path = "C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\CPU_data_middle.xlsx"  # 파일 경로 지정
+file_path = 'C:\\workstation\\CPU\\CPU_data_big.xlsx'  # 파일 경로 지정
 df = pd.read_excel(file_path)
 
 # 필요한 열에 대한 전처리 수행
@@ -23,15 +26,14 @@ def remove_special_characters(text):
 # '요약' 열에 적용하여 특수 문자 제거
 df['발명의 명칭'] = df['발명의 명칭'].astype(str).apply(remove_special_characters)
 
-
 # 불용어 제거 코드
 nltk.download('stopwords')
 nltk.download('punkt')
 stop_words = set(stopwords.words('english'))
-custom_stopwords = ['METHOD','APPARATUS', 'USING', 'BASED','BY','OR','AND', 'OF','A','AND','FOR','IN','SOME', 'TO', 'WHICH', 'OR', 'OF', 'THE', 'WITH','MORE', 'IS', 'AN', 'AT','FIRST', 'FROM','AS', 'ON', 'TO', 'THAT', 'BY'
-                    'ONE','MORE', 'IS', 'AN', 'AT','FIRST', 'FROM','AS','BE','CAN','SECOND','EACH','MAY','DURING','ALSO', 'INTO','SUCH','INPUT','NEW','USED','THAN','HAVING','TAKEN','TRUE','WITHIN','THEIR','BEING','OVER'
-                    , 'FULL','ONE','ARE','THEREBY','I','THIS','IF','WHOM','ITS','THEN','END','JUST','N','THEREOF', 'PROVIDE', 'SET', 'CREATE', 'OTHER', 'LEAST', 'ASSIGN', 'INCLUDE', 'ALLOW', 'LELATE', 'CONTENT', 'STEP', 
-                    'DISCLOSE', 'TRANSLATED']  # 본문에 사용하시는 불용어 리스트
+custom_stopwords = ['METHOD', 'APPARATUS', 'USING', 'BASED', 'BY', 'OR', 'AND', 'OF', 'A', 'AND', 'FOR', 'IN', 'SOME', 'TO', 'WHICH', 'OR', 'OF', 'THE', 'WITH', 'MORE', 'IS', 'AN', 'AT', 'FIRST', 'FROM', 'AS', 'ON', 'TO', 'THAT', 'BY'
+                    'ONE', 'MORE', 'IS', 'AN', 'AT', 'FIRST', 'FROM', 'AS', 'BE', 'CAN', 'SECOND', 'EACH', 'MAY', 'DURING', 'ALSO', 'INTO', 'SUCH', 'INPUT', 'NEW', 'USED', 'THAN', 'HAVING', 'TAKEN', 'TRUE', 'WITHIN', 'THEIR', 'BEING', 'OVER'
+                    , 'FULL', 'ONE', 'ARE', 'THEREBY', 'I', 'THIS', 'IF', 'WHOM', 'ITS', 'THEN', 'END', 'JUST', 'N', 'THEREOF', 'PROVIDE', 'SET', 'CREATE', 'OTHER', 'LEAST', 'ASSIGN', 'INCLUDE', 'ALLOW', 'LELATE', 'CONTENT', 'STEP',
+                    'DISCLOSE', 'TRANSLATED']  # 추가할 불용어 리스트
 for word in custom_stopwords:
     stop_words.add(word)
 
@@ -44,19 +46,11 @@ def remove_stopwords(text):
 # 불용어 제거 및 대체 작업 적용
 df['발명의 명칭'] = df['발명의 명칭'].astype(str).apply(remove_stopwords)
 
-#표제어추출
-# WordNet 데이터 다운로드 (표제어 추출을 위해 필요)
+# 표제어 추출을 위한 WordNet 데이터 다운로드
 nltk.download('wordnet')
 
 # WordNetLemmatizer 객체 생성
 lemmatizer = WordNetLemmatizer()
-
-# 여러분의 DataFrame('df')을 가정하고 있는데, 여기서 '요약' 컬럼을 가정합니다.
-# 해당 컬럼의 각 단어를 lemmatize하여 다시 컬럼에 할당하는 예시입니다.
-df['발명의 명칭'] = df['발명의 명칭'].astype(str).apply(lambda x: ' '.join([lemmatizer.lemmatize(word) for word in x.split()]))
-
-# SpaCy 모델 로드
-nlp = spacy.load("en_core_web_sm")
 
 # 표제어 추출 함수
 def lemmatize_text(text):
@@ -76,24 +70,15 @@ def extract_noun_words(text):
 # DataFrame의 '요약' 열에 적용하여 명사만 추출
 df['발명의 명칭'] = df['발명의 명칭'].astype(str).apply(extract_noun_words)
 
-
-
-# 대체어 작성 코드
-replacements = {
-
-
-}
-# 단어 대체 적용
-for key, value in replacements.items():
-    df['발명의 명칭'] = df['발명의 명칭'].str.replace(key, value, case=False)
-
 # '출원일' 열의 형식 변환
-df['출원일'] = pd.to_datetime(df['출원일'], errors='coerce')
-
+df['출원일'] = pd.to_datetime(df['출원일'], format='%Y.%m.%d', errors='coerce')
 
 # NaT 값을 제거하는 것도 고려할 수 있습니다.
 df = df.dropna(subset=['출원일'])
+df['출원연도'] = df['출원일'].dt.year
 
+# 출원연도가 2019년 이후인 데이터만 선택
+df_2019_onwards = df[df['출원연도'] >= 2019]
 
 # bigram 생성 함수 정의
 def create_bigrams(text):
@@ -101,21 +86,25 @@ def create_bigrams(text):
     bigram_list = ['_'.join(bigram) for bigram in bigrams(word_tokens)]
     return ' '.join(bigram_list)
 
-# 발명의 명칭 열에 적용하여 bigram 생성
-df['발명의 명칭_bigrams'] = df['발명의 명칭'].astype(str).apply(create_bigrams)
+# 발명의 명칭 열에 적용하여 bigram 생성 및 할당
+df_2019_onwards = df_2019_onwards.copy()
+df_2019_onwards.loc[:, '발명의 명칭_bigrams'] = df_2019_onwards['발명의 명칭'].astype(str).apply(create_bigrams)
+
+# 중복 바이그램 제거
+df_2019_onwards.loc[:, '발명의 명칭_bigrams'] = df_2019_onwards['발명의 명칭_bigrams'].apply(lambda x: ' '.join(pd.Series(x.split()).drop_duplicates()))
 
 # 연도별, 기술별로 그룹화하고 키워드 빈도분석
-keyword_freq = df.groupby(['중분류', df['출원일'].dt.year])['발명의 명칭'].apply(lambda x: ' '.join(x)).apply(lambda x: pd.Series(nltk.FreqDist(word_tokenize(x.upper())))).unstack().fillna(0)
+keyword_freq = df_2019_onwards.groupby(['중분류', df_2019_onwards['출원일'].dt.year])['발명의 명칭'].apply(lambda x: ' '.join(x)).apply(lambda x: pd.Series(nltk.FreqDist(word_tokenize(x.upper())))).unstack().fillna(0)
 
 # bigram에 대한 빈도분석
-keyword_freq_bigrams = df.groupby(['중분류', df['출원일'].dt.year])['발명의 명칭_bigrams'].apply(lambda x: ' '.join(x)).apply(lambda x: pd.Series(nltk.FreqDist(word_tokenize(x.upper())))).unstack().fillna(0)
+keyword_freq_bigrams = df_2019_onwards.groupby(['중분류', df_2019_onwards['출원일'].dt.year])['발명의 명칭_bigrams'].apply(lambda x: ' '.join(x)).apply(lambda x: pd.Series(nltk.FreqDist(word_tokenize(x.upper())))).unstack().fillna(0)
 
-# 전치하여 행과 열을 바꾸고 CSV 파일로 저장
+# 전치하여 행과 열을 바꾸기
 keyword_freq_transposed = keyword_freq.T
 keyword_freq_bigrams_transposed = keyword_freq_bigrams.T
 
-# 두 DataFrame을 합치기
-merged_df = pd.concat([keyword_freq_transposed, keyword_freq_bigrams_transposed], axis=1)
+# 키워드 빈도 분석 결과를 EXCEL 파일로 저장
+keyword_freq_transposed.to_excel("C:\\workstation\\CPU\\CPU_keyword_freq_2019_onwards.xlsx")
 
-# 합친 DataFrame을 EXCEL 파일로 저장
-merged_df.to_excel("C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\CPU_data_middle.excel")
+# 바이그램 빈도 분석 결과를 EXCEL 파일로 저장
+keyword_freq_bigrams_transposed.to_excel("C:\\workstation\\CPU\\CPU_bigram_freq_2019_onwards.xlsx")
