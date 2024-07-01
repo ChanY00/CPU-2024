@@ -6,8 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="6d35108a-8572-405c-b914-57712d151adf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CPU_data_small.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/CPU_data_small.xlsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/biagram포함.py" beforeDir="false" afterPath="$PROJECT_DIR$/biagram포함.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,7 +58,7 @@
       <workItem from="1719299500377" duration="17000" />
       <workItem from="1719536623115" duration="8568000" />
       <workItem from="1719549114032" duration="1785000" />
-      <workItem from="1719796087320" duration="3213000" />
+      <workItem from="1719796087320" duration="4670000" />
     </task>
     <servers />
   </component>

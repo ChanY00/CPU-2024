@@ -11,7 +11,7 @@ from nltk import bigrams
 nlp = spacy.load("en_core_web_sm")
 
 # 엑셀 파일 불러오기
-file_path = 'C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\CPU_data_small.xlsx'  # 파일 경로 지정
+file_path = 'C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\CPU_data_middle.xlsx'  # 파일 경로 지정
 df = pd.read_excel(file_path)
 
 # 필요한 열에 대한 전처리 수행
