@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from collections import Counter
 
 # 엑셀 파일 읽기
-file_path = 'C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\CPU_keywords_2019_onwards.xlsx'  # 파일 경로 지정
+file_path = 'C:\\Users\\kseon\\CPU\\캠퍼스 유니버시아드\\코드\\CPU_keywords_2019_onwards.xlsx'  # 파일 경로 지정
 dataset = pd.read_excel(file_path)
 
 # 필요한 열에 대한 전처리 수행
