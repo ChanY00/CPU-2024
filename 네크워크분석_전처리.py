@@ -11,7 +11,7 @@ from nltk import bigrams
 nlp = spacy.load("en_core_web_sm")
 
 # 엑셀 파일 불러오기
-file_path = 'C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\CPU_data_big.xlsx'  # 파일 경로 지정
+file_path = 'C:\\workstation\\CPU\\CPU-2024\\CPU_data_big_.xlsx'  # 파일 경로 지정
 df = pd.read_excel(file_path)
 
 # 필요한 열에 대한 전처리 수행
@@ -84,4 +84,4 @@ df['출원연도'] = df['출원일'].dt.year
 result_df = df[['중분류', '출원연도', '발명의 명칭']]
 
 # 결과를 EXCEL 파일로 저장
-result_df.to_excel("C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\CPU_big_keywords.xlsx", index=False)
+result_df.to_excel("C:\\workstation\\CPU\\CPU-2024\\네트워크분석전처리.xlsx", index=False)
