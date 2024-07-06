@@ -6,14 +6,14 @@ import matplotlib.pyplot as plt
 from collections import Counter
 
 # 엑셀 파일 읽기
-file_path = 'C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\CPU_keywords_2019_onwards.xlsx'  # 파일 경로 지정
+file_path = 'C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\test_combined_bigrams.xlsx'  # 파일 경로 지정
 dataset = pd.read_excel(file_path)
 
 # 필요한 열에 대한 전처리 수행
 dataset['발명의 명칭'] = dataset['발명의 명칭'].astype(str).apply(lambda x: x.upper())
 
 # 2019년도 데이터만 필터링
-year_data = dataset[dataset['출원연도'] == 2019]
+year_data = dataset[dataset['출원연도'] == 2023]
 
 # 키워드 빈도 계산
 all_keywords = []
@@ -65,7 +65,7 @@ for _, row in year_data.iterrows():
             G.add_edge(filtered_row_keywords[i], filtered_row_keywords[j], weight=1)
 
 # 노드의 색 지정
-node_colors = ['grey' for node in G.nodes()]
+node_colors = ['red' for node in G.nodes()]
 
 # 노드 크기 조정
 sizes = [G.nodes[node]['nodesize'] * 10000 for node in G]
