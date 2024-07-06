@@ -6,8 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="6d35108a-8572-405c-b914-57712d151adf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/네크워크분석_전처리.py" beforeDir="false" afterPath="$PROJECT_DIR$/네크워크분석_전처리.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/네트워크 분석.py" beforeDir="false" afterPath="$PROJECT_DIR$/네트워크 분석.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CPU_data_big_csv.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/country_trend.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/download.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/top_applicants.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/yearly_trend.csv" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +77,7 @@
       <workItem from="1719834341748" duration="5351000" />
       <workItem from="1719987388518" duration="4114000" />
       <workItem from="1719992306587" duration="16047000" />
-      <workItem from="1720085952700" duration="7850000" />
+      <workItem from="1720085952700" duration="10408000" />
     </task>
     <servers />
   </component>
