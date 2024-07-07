@@ -1,36 +1,17 @@
 import pandas as pd
 import re
 import nltk
-from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 import spacy
 from nltk import bigrams
-from googletrans import Translator
-import time
 
 # SpaCy 모델 로드
 nlp = spacy.load("en_core_web_sm")
 
 # 엑셀 파일 불러오기
-file_path = 'C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\CPU_data_big.xlsx'  # 파일 경로 지정
+file_path = 'C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\translated_small.xlsx'  # 파일 경로 지정
 df = pd.read_excel(file_path)
-
-# 번역기 객체 생성
-translator = Translator()
-
-# 번역 함수 정의
-def translate_text(text, retry=3):
-    for _ in range(retry):
-        try:
-            return translator.translate(text, src='ko', dest='en').text
-        except Exception as e:
-            print(f"Error: {e}. Retrying...")
-            time.sleep(5)
-    return text
-
-# 발명의 명칭 열 번역
-df['발명의 명칭'] = df['발명의 명칭'].apply(translate_text)
 
 # 필요한 열에 대한 전처리 수행
 df['발명의 명칭'] = df['발명의 명칭'].astype(str)
@@ -44,33 +25,6 @@ def remove_special_characters(text):
 # '발명의 명칭' 열에 적용하여 특수 문자 제거
 df['발명의 명칭'] = df['발명의 명칭'].astype(str).apply(remove_special_characters)
 df['발명의 명칭'] = df['발명의 명칭'].apply(lambda x: x.upper())
-
-# 불용어 제거 코드
-nltk.download('stopwords')
-nltk.download('punkt')
-stop_words = set(stopwords.words('english'))
-custom_stopwords = ['METHOD', 'APPARATUS', 'USING', 'BASED', 'BY', 'OR', 'AND', 'OF', 'A',
-                    'AND', 'FOR', 'IN', 'SOME', 'TO', 'WHICH', 'OR', 'OF', 'THE', 'WITH',
-                    'MORE', 'IS', 'AN', 'AT', 'FIRST', 'FROM', 'AS', 'ON', 'TO', 'THAT', 'BY'
-                    'ONE', 'MORE', 'IS', 'AN', 'AT', 'FIRST', 'FROM', 'AS', 'BE', 'CAN',
-                    'SECOND', 'EACH', 'MAY', 'DURING', 'ALSO', 'INTO', 'SUCH', 'INPUT',
-                    'NEW', 'USED', 'THAN', 'HAVING', 'TAKEN', 'TRUE', 'WITHIN', 'THEIR', 'BEING',
-                    'OVER', 'FULL', 'ONE', 'ARE', 'THEREBY', 'I', 'THIS', 'IF', 'WHOM', 'ITS',
-                    'THEN', 'END', 'JUST', 'N', 'THEREOF', 'PROVIDE', 'SET', 'CREATE', 'OTHER',
-                    'LEAST', 'ASSIGN', 'INCLUDE', 'ALLOW', 'LELATE', 'CONTENT', 'STEP',
-                    'DISCLOSE', 'TRANSLATED', 'METHODS', 'ASSEMBLY', 'DEVICE', 'SYSTEM',
-                    'CONTROL', 'TAKEOFF', 'SAME', 'STRUCTURE', 'PROGRAM']  # 추가할 불용어 리스트
-for word in custom_stopwords:
-    stop_words.add(word)
-
-# 불용어 제거 함수 정의
-def remove_stopwords(text):
-    word_tokens = word_tokenize(text)
-    filtered_text = ' '.join([word for word in word_tokens if word.upper() not in stop_words])
-    return filtered_text
-
-# 불용어 제거 및 대체 작업 적용
-df['발명의 명칭'] = df['발명의 명칭'].astype(str).apply(remove_stopwords)
 
 # 표제어 추출을 위한 WordNet 데이터 다운로드
 nltk.download('wordnet')
@@ -120,4 +74,4 @@ df['발명의 명칭_combined'] = df['발명의 명칭'] + ' ' + df['발명의 �
 result_df = df[['중분류', '출원연도', '발명의 명칭_combined']]
 
 # 결과를 EXCEL 파일로 저장
-result_df.to_excel("C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\net_big.xlsx", index=False)
+result_df.to_excel("C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\net_small.xlsx", index=False)
