@@ -5,6 +5,7 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 import spacy
 from nltk import bigrams
+from nltk.corpus import stopwords
 
 # SpaCy 모델 로드
 nlp = spacy.load("en_core_web_sm")
@@ -25,6 +26,33 @@ def remove_special_characters(text):
 # '발명의 명칭' 열에 적용하여 특수 문자 제거
 df['발명의 명칭'] = df['발명의 명칭'].astype(str).apply(remove_special_characters)
 df['발명의 명칭'] = df['발명의 명칭'].apply(lambda x: x.upper())
+
+# 불용어 제거 코드
+nltk.download('stopwords')
+nltk.download('punkt')
+stop_words = set(stopwords.words('english'))
+custom_stopwords = ['METHOD', 'APPARATUS', 'USING', 'BASED', 'BY', 'OR', 'AND', 'OF', 'A',
+                    'AND', 'FOR', 'IN', 'SOME', 'TO', 'WHICH', 'OR', 'OF', 'THE', 'WITH',
+                    'MORE', 'IS', 'AN', 'AT', 'FIRST', 'FROM', 'AS', 'ON', 'TO', 'THAT', 'BY'
+                    'ONE', 'MORE', 'IS', 'AN', 'AT', 'FIRST', 'FROM', 'AS', 'BE', 'CAN',
+                    'SECOND', 'EACH', 'MAY', 'DURING', 'ALSO', 'INTO', 'SUCH', 'INPUT', 'VEHICLE',
+                    'NEW', 'USED', 'THAN', 'HAVING', 'TAKEN', 'TRUE', 'WITHIN', 'THEIR', 'BEING',
+                    'OVER', 'FULL', 'ONE', 'ARE', 'THEREBY', 'I', 'THIS', 'IF', 'WHOM', 'ITS',
+                    'THEN', 'END', 'JUST', 'N', 'THEREOF', 'PROVIDE', 'SET', 'CREATE', 'OTHER',
+                    'LEAST', 'ASSIGN', 'INCLUDE', 'ALLOW', 'LELATE', 'CONTENT', 'STEP',
+                    'DISCLOSE', 'TRANSLATED', 'METHODS', 'ASSEMBLY', 'DEVICE', 'SYSTEM', 'SYSTEMS',
+                    'CONTROL', 'TAKEOFF', 'SAME', 'STRUCTURE', 'PROGRAM']  # 추가할 불용어 리스트
+for word in custom_stopwords:
+    stop_words.add(word)
+
+# 불용어 제거 함수 정의
+def remove_stopwords(text):
+    word_tokens = word_tokenize(text)
+    filtered_text = ' '.join([word for word in word_tokens if word.upper() not in stop_words])
+    return filtered_text
+
+# 불용어 제거 및 대체 작업 적용
+df['발명의 명칭'] = df['발명의 명칭'].astype(str).apply(remove_stopwords)
 
 # 표제어 추출을 위한 WordNet 데이터 다운로드
 nltk.download('wordnet')
@@ -67,11 +95,14 @@ df['발명의 명칭_bigrams'] = df['발명의 명칭'].astype(str).apply(create
 # 중복 바이그램 제거
 df['발명의 명칭_bigrams'] = df['발명의 명칭_bigrams'].apply(lambda x: ' '.join(pd.Series(x.split()).drop_duplicates()))
 
-# 발명의 명칭과 발명의 명칭_bigrams 열을 합침
-df['발명의 명칭_combined'] = df['발명의 명칭'] + ' ' + df['발명의 명칭_bigrams']
+# 발명의 명칭과 발명의 명칭_bigrams 열을 조건부로 합침
+df['발명의 명칭'] = df.apply(
+    lambda row: row['발명의 명칭'] + (' ' + row['발명의 명칭_bigrams'] if row['발명의 명칭_bigrams'] else ''),
+    axis=1
+)
 
 # 결과 데이터프레임에 필요한 열 선택
-result_df = df[['중분류', '출원연도', '발명의 명칭_combined']]
+result_df = df[['소분류', '출원연도', '발명의 명칭']]
 
 # 결과를 EXCEL 파일로 저장
 result_df.to_excel("C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\net_small.xlsx", index=False)
