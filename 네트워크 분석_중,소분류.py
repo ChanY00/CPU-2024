@@ -10,7 +10,7 @@ from nltk.tokenize import word_tokenize
 
 
 # 엑셀 파일 읽기
-file_path = 'C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\net_big.xlsx'  # 파일 경로 지정
+file_path = 'C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\net_middle.xlsx'  # 파일 경로 지정
 dataset = pd.read_excel(file_path)
 
 # 필요한 열에 대한 전처리 수행
@@ -33,7 +33,6 @@ def remove_stopwords(text):
 # 불용어 제거 및 대체 작업 적용
 dataset['발명의 명칭'] = dataset['발명의 명칭'].astype(str).apply(remove_stopwords)
 
-
 # 2019년도 데이터만 필터링
 year_data = dataset[dataset['출원연도'] == 2019]
 
@@ -44,7 +43,7 @@ for _, row in year_data.iterrows():
     all_keywords.extend(keywords)
 
 keyword_counts = Counter(all_keywords)
-filtered_keywords = {k for k, v in keyword_counts.items() if v >= 40}
+filtered_keywords = {k for k, v in keyword_counts.items() if v >= 100}
 
 # 네트워크 생성
 G_central = nx.Graph()
@@ -87,6 +86,9 @@ for _, row in year_data.iterrows():
         for j in range(i + 1, len(filtered_row_keywords)):
             if filtered_row_keywords[i] != filtered_row_keywords[j]:  # 자기 자신과의 연결 방지
                 G.add_edge(filtered_row_keywords[i], filtered_row_keywords[j], weight=1)
+                # 중분류 추가
+                G.nodes[filtered_row_keywords[i]]['중분류'] = row['중분류']
+                G.nodes[filtered_row_keywords[j]]['중분류'] = row['중분류']
 
 # 노드의 색 지정 및 크기 조정
 node_colors = [plt.cm.viridis(G.nodes[node]['nodesize']) for node in G.nodes()]
@@ -96,6 +98,9 @@ sizes = [G.nodes[node]['nodesize'] * 100000 for node in G]
 font_fname = "c:/Windows/Fonts/malgun.ttf"
 fontprop = fm.FontProperties(fname=font_fname, size=12)
 
+# 노드 라벨 생성
+labels = {node: f"{node}\n({G.nodes[node]['중분류']})" for node in G.nodes()}
+
 # 그리기 옵션 설정
 options = {
     'edge_color': '#A0CBE2',
@@ -104,7 +109,8 @@ options = {
     'font_weight': 'regular',
     'font_family': fontprop.get_name(),
     'node_color': node_colors,  # 노드 색 설정
-    'alpha': 0.7
+    'alpha': 0.7,
+    'labels': labels  # 노드 라벨 설정
 }
 
 # 그래프 그리기
