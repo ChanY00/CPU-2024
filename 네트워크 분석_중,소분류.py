@@ -49,15 +49,18 @@ G_central = nx.Graph()
 
 # 네트워크 구축 (빈도가 40번 이상인 키워드만 사용)
 for _, row in year_data.iterrows():
+    category = row['중분류']
     keywords = [keyword.strip() for keyword in row['발명의 명칭'].split(',')]
     filtered_row_keywords = [keyword for keyword in keywords if keyword in filtered_keywords]
     for i in range(len(filtered_row_keywords)):
         for j in range(i + 1, len(filtered_row_keywords)):
             if filtered_row_keywords[i] != filtered_row_keywords[j]:  # 자기 자신과의 연결 방지
-                if G_central.has_edge(filtered_row_keywords[i], filtered_row_keywords[j]):
-                    G_central[filtered_row_keywords[i]][filtered_row_keywords[j]]['weight'] += 1
+                edge_label_i = f"{filtered_row_keywords[i]}\n({category})"
+                edge_label_j = f"{filtered_row_keywords[j]}\n({category})"
+                if G_central.has_edge(edge_label_i, edge_label_j):
+                    G_central[edge_label_i][edge_label_j]['weight'] += 1
                 else:
-                    G_central.add_edge(filtered_row_keywords[i], filtered_row_keywords[j], weight=1)
+                    G_central.add_edge(edge_label_i, edge_label_j, weight=1)
 
 # 중심성 척도 계산
 dgr = nx.degree_centrality(G_central)
@@ -78,19 +81,22 @@ G = nx.Graph()
 
 # 페이지 랭크에 따라 두 노드 사이의 연관성을 결정 (단어 연관성)
 # 연결 중심성으로 계산한 척도에 따라 노드의 크기가 결정됨 (단어의 등장 빈도수)
-for i in range(len(sorted_pgr)):
-    G.add_node(sorted_pgr[i][0], nodesize=sorted_pgr[i][1])
+for node, centrality in sorted_pgr:
+    G.add_node(node, nodesize=centrality)
 
 for _, row in year_data.iterrows():
+    category = row['중분류']
     keywords = [keyword.strip() for keyword in row['발명의 명칭'].split(',')]
     filtered_row_keywords = [keyword for keyword in keywords if keyword in filtered_keywords]
     for i in range(len(filtered_row_keywords)):
         for j in range(i + 1, len(filtered_row_keywords)):
             if filtered_row_keywords[i] != filtered_row_keywords[j]:  # 자기 자신과의 연결 방지
-                if G.has_edge(filtered_row_keywords[i], filtered_row_keywords[j]):
-                    G[filtered_row_keywords[i]][filtered_row_keywords[j]]['weight'] += 1
+                edge_label_i = f"{filtered_row_keywords[i]}\n({category})"
+                edge_label_j = f"{filtered_row_keywords[j]}\n({category})"
+                if G.has_edge(edge_label_i, edge_label_j):
+                    G[edge_label_i][edge_label_j]['weight'] += 1
                 else:
-                    G.add_edge(filtered_row_keywords[i], filtered_row_keywords[j], weight=1)
+                    G.add_edge(edge_label_i, edge_label_j, weight=1)
 
 # 노드의 색 지정 및 크기 조정
 node_colors = [plt.cm.viridis(G.nodes[node]['nodesize']) for node in G.nodes()]
@@ -113,10 +119,10 @@ options = {
 
 # 그래프 그리기
 plt.figure(figsize=(16, 16))
-nx.draw(G, node_size=sizes, pos=nx.spring_layout(G, k=3.5, iterations=100), **options)
+pos = nx.spring_layout(G, k=3.5, iterations=100)
+
+nx.draw(G, node_size=sizes, pos=pos, **options)
 ax = plt.gca()
 ax.collections[0].set_edgecolor('#555555')
 plt.title('Network Analysis for 2019', size=20)
 plt.show()
-
- # 이 코드에서 중분류를 노드 속성으로 추가하고 그래프에 표시할 수 있도록 코드를 수정
