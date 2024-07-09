@@ -4,13 +4,33 @@ import operator
 import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
 from collections import Counter
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 
 # 엑셀 파일 읽기
-file_path = 'C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\CPU_keywords_2019_onwards.xlsx'  # 파일 경로 지정
+file_path = 'C:\\Users\\dnjsr\\Desktop\\캠퍼스 유니버시아드\\코드\\net_big.xlsx'  # 파일 경로 지정
 dataset = pd.read_excel(file_path)
 
 # 필요한 열에 대한 전처리 수행
 dataset['발명의 명칭'] = dataset['발명의 명칭'].astype(str).apply(lambda x: x.upper())
+
+# 불용어 제거 코드
+nltk.download('stopwords')
+nltk.download('punkt')
+stop_words = set(stopwords.words('english'))
+custom_stopwords = ['', '']  # 추가할 불용어 리스트
+for word in custom_stopwords:
+    stop_words.add(word)
+
+# 불용어 제거 함수 정의
+def remove_stopwords(text):
+    word_tokens = word_tokenize(text)
+    filtered_text = ' '.join([word for word in word_tokens if word.upper() not in stop_words])
+    return filtered_text
+
+# 불용어 제거 및 대체 작업 적용
+dataset['발명의 명칭'] = dataset['발명의 명칭'].astype(str).apply(remove_stopwords)
 
 # 2019년도 데이터만 필터링
 year_data = dataset[dataset['출원연도'] == 2019]
@@ -18,22 +38,26 @@ year_data = dataset[dataset['출원연도'] == 2019]
 # 키워드 빈도 계산
 all_keywords = []
 for _, row in year_data.iterrows():
-    keywords = row['발명의 명칭'].split(',')
+    keywords = [keyword.strip() for keyword in row['발명의 명칭'].split(',')]
     all_keywords.extend(keywords)
 
 keyword_counts = Counter(all_keywords)
-filtered_keywords = {k for k, v in keyword_counts.items() if v >= 8}
+filtered_keywords = {k for k, v in keyword_counts.items() if v >= 30}
 
 # 네트워크 생성
 G_central = nx.Graph()
 
-# 네트워크 구축 (빈도가 3번 이상인 키워드만 사용)
+# 네트워크 구축 (빈도가 40번 이상인 키워드만 사용)
 for _, row in year_data.iterrows():
-    keywords = row['발명의 명칭'].split(',')
+    keywords = [keyword.strip() for keyword in row['발명의 명칭'].split(',')]
     filtered_row_keywords = [keyword for keyword in keywords if keyword in filtered_keywords]
     for i in range(len(filtered_row_keywords)):
         for j in range(i + 1, len(filtered_row_keywords)):
-            G_central.add_edge(filtered_row_keywords[i], filtered_row_keywords[j], weight=1)
+            if filtered_row_keywords[i] != filtered_row_keywords[j]:  # 자기 자신과의 연결 방지
+                if G_central.has_edge(filtered_row_keywords[i], filtered_row_keywords[j]):
+                    G_central[filtered_row_keywords[i]][filtered_row_keywords[j]]['weight'] += 1
+                else:
+                    G_central.add_edge(filtered_row_keywords[i], filtered_row_keywords[j], weight=1)
 
 # 중심성 척도 계산
 dgr = nx.degree_centrality(G_central)
@@ -58,36 +82,39 @@ for i in range(len(sorted_pgr)):
     G.add_node(sorted_pgr[i][0], nodesize=sorted_pgr[i][1])
 
 for _, row in year_data.iterrows():
-    keywords = row['발명의 명칭'].split(',')
+    keywords = [keyword.strip() for keyword in row['발명의 명칭'].split(',')]
     filtered_row_keywords = [keyword for keyword in keywords if keyword in filtered_keywords]
     for i in range(len(filtered_row_keywords)):
         for j in range(i + 1, len(filtered_row_keywords)):
-            G.add_edge(filtered_row_keywords[i], filtered_row_keywords[j], weight=1)
+            if filtered_row_keywords[i] != filtered_row_keywords[j]:  # 자기 자신과의 연결 방지
+                if G.has_edge(filtered_row_keywords[i], filtered_row_keywords[j]):
+                    G[filtered_row_keywords[i]][filtered_row_keywords[j]]['weight'] += 1
+                else:
+                    G.add_edge(filtered_row_keywords[i], filtered_row_keywords[j], weight=1)
 
-# 노드의 색 지정
-node_colors = ['grey' for node in G.nodes()]
-
-# 노드 크기 조정
-sizes = [G.nodes[node]['nodesize'] * 10000 for node in G]
+# 노드의 색 지정 및 크기 조정
+node_colors = [plt.cm.viridis(G.nodes[node]['nodesize']) for node in G.nodes()]
+sizes = [G.nodes[node]['nodesize'] * 50000 for node in G]
 
 # 폰트 설정
 font_fname = "c:/Windows/Fonts/malgun.ttf"
-fontprop = fm.FontProperties(fname=font_fname, size=18)
+fontprop = fm.FontProperties(fname=font_fname, size=12)
 
 # 그리기 옵션 설정
 options = {
-    'edge_color': '#FFDEA2',
-    'width': 1,
+    'edge_color': '#A0CBE2',
+    'width': 2,
     'with_labels': True,
     'font_weight': 'regular',
     'font_family': fontprop.get_name(),
-    'node_color': node_colors  # 노드 색 설정
+    'node_color': node_colors,  # 노드 색 설정
+    'alpha': 0.7
 }
 
 # 그래프 그리기
-plt.figure(figsize=(12, 12))
-nx.draw(G, node_size=sizes, pos=nx.spring_layout(G, k=0.5, iterations=100), **options)
+plt.figure(figsize=(16, 16))
+nx.draw(G, node_size=sizes, pos=nx.spring_layout(G, k=3.5, iterations=100), **options)
 ax = plt.gca()
 ax.collections[0].set_edgecolor('#555555')
-plt.title('Network Analysis for 2019')
+plt.title('Network Analysis for 2019', size=20)
 plt.show()
