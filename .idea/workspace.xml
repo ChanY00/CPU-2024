@@ -6,8 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="6d35108a-8572-405c-b914-57712d151adf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/net_middle.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/net_middle.xlsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/net_small.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/net_small.xlsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/네트워크 분석_2.py" beforeDir="false" afterPath="$PROJECT_DIR$/네트워크 분석_2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/네트워크분석_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/네트워크분석_3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/네트워크분석_결과물/중분류/중분류_2019.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/네트워크분석_결과물/중분류/중분류_2020.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/네트워크분석_결과물/중분류/중분류_2021.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/네트워크분석_결과물/중분류/중분류_2022.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,10 +48,11 @@
     "Python.네트워크 분석_2.executor": "Run",
     "Python.네트워크 분석_번역.executor": "Run",
     "Python.네트워크 분석_중,소분류.executor": "Run",
+    "Python.네트워크분석_3.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "chan",
-    "last_opened_file_path": "C:/Users/dnjsr/Desktop/캠퍼스 유니버시아드/코드/네트워크분석_결과물/중분류",
+    "last_opened_file_path": "C:/Users/dnjsr/Desktop/캠퍼스 유니버시아드/코드/네트워크분석_결과물/소분류",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -57,6 +63,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\dnjsr\Desktop\캠퍼스 유니버시아드\코드\네트워크분석_결과물\소분류" />
       <recent name="C:\Users\dnjsr\Desktop\캠퍼스 유니버시아드\코드" />
       <recent name="C:\Users\dnjsr\Desktop\캠퍼스 유니버시아드\코드\네트워크분석_결과물\대분류" />
     </key>
@@ -89,7 +96,9 @@
       <workItem from="1720338165557" duration="5579000" />
       <workItem from="1720421581447" duration="7456000" />
       <workItem from="1720497963798" duration="17217000" />
-      <workItem from="1720585225237" duration="4269000" />
+      <workItem from="1720585225237" duration="5607000" />
+      <workItem from="1720610258485" duration="2695000" />
+      <workItem from="1720670378157" duration="10034000" />
     </task>
     <servers />
   </component>
@@ -112,6 +121,7 @@
     <SUITE FILE_PATH="coverage/$biagram.coverage" NAME="biagram포함 Coverage Results" MODIFIED="1719981453068" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/$_.coverage" NAME="네트워크 분석 Coverage Results" MODIFIED="1720509379758" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/$__.coverage" NAME="네트워크 분석_번역 Coverage Results" MODIFIED="1720231625242" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/$__2.coverage" NAME="네트워크 분석_2 Coverage Results" MODIFIED="1720589496215" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/$__2.coverage" NAME="네트워크 분석_2 Coverage Results" MODIFIED="1720611718889" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/$_3.coverage" NAME="네트워크분석_3 Coverage Results" MODIFIED="1720680397433" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
