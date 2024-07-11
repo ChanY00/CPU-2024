@@ -13,7 +13,7 @@ dataset = pd.read_excel(file_path)
 dataset['발명의 명칭'] = dataset['발명의 명칭'].astype(str).apply(lambda x: x.upper())
 
 # 2020년도 데이터만 필터링
-year_data = dataset[dataset['출원연도'] == 2022]
+year_data = dataset[dataset['출원연도'] == 2019]
 
 # 키워드 빈도 계산
 all_keywords = []
@@ -53,5 +53,5 @@ fontprop = fm.FontProperties(fname="c:/Windows/Fonts/malgun.ttf", size=12)
 texts = [plt.text(pos[node][0], pos[node][1], node, fontproperties=fontprop) for node in G.nodes()]
 adjust_text(texts, arrowprops=dict(arrowstyle='-', color='blue', lw=1))
 
-plt.title('Network Analysis for 2022', fontsize=20)
+plt.title('Network Analysis for Middle Category 2019', fontsize=20)
 plt.show()
